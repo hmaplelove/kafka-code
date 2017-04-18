@@ -5,6 +5,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.integration.kafka.support.KafkaHeaders;
@@ -21,9 +23,17 @@ import com.casicloud.aop.kafka.producer.DataUtils;
 @Controller
 @RequestMapping("/api")
 public class ProducerController {
+	private static Logger logger=LoggerFactory.getLogger(ProducerController.class);
 	@Autowired
     @Qualifier("inputToKafka")
     private MessageChannel channel;
+	/**
+	 * 发送消息
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping("/iotData")
 	@ResponseBody
 	public Boolean  send(HttpServletRequest request,HttpServletResponse response) throws Exception{
@@ -37,7 +47,7 @@ public class ProducerController {
 			if (!b) {
 				flag=b;
 			}
-			System.out.println(data.toString());
+			logger.debug(data.toString());
 		}
 		return flag;
 		
