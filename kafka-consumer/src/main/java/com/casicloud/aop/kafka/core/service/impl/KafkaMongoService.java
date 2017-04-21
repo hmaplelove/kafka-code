@@ -15,11 +15,13 @@ import com.alibaba.fastjson.JSON;
 import com.casicloud.aop.kafka.core.service.KafkaService;
 
 public class KafkaMongoService implements KafkaService{
+	
 	private static final Logger logger = LoggerFactory.getLogger(KafkaMongoService.class);
 	private static SimpleDateFormat sdf_full=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
 	
 	@Autowired
 	private MongoTemplate mongoTemplate;
+	
 	@Override
 	public void processMessage(Map<Object, Map<Object, Object>> message) throws Exception {
 		onMessage(message);

@@ -14,22 +14,28 @@
     <int-kafka:inbound-channel-adapter
             id="kafkaHdfsInboundChannelAdapter"
             kafka-consumer-context-ref="consumerHdfsContext"
-            auto-startup="false"
+            auto-startup="true"
             channel="inputFromKafkaToHdfs">
         <int:poller fixed-delay="1" time-unit="MILLISECONDS"/>
     </int-kafka:inbound-channel-adapter>
     
     <bean id="kafkaHdfsService" class="com.casicloud.aop.kafka.core.service.impl.KafkaHdfsService"/>
 
-    <int:outbound-channel-adapter channel="inputFromKafkaToHdfs" ref="kafkaHdfsService" method="processMessage" />
+    <int:outbound-channel-adapter id="kafkaHdfsOutboundChannelAdapter" channel="inputFromKafkaToHdfs" ref="kafkaHdfsService" method="processMessage" />
 
     <int-kafka:consumer-context id="consumerHdfsContext" consumer-timeout="1000" zookeeper-connect="zookeeperConnect" consumer-properties="consumerProperties">
         <int-kafka:consumer-configurations>
-            <int-kafka:consumer-configuration group-id="group_hdfs"
+        	<int-kafka:consumer-configuration group-id="group_hdfs_rt"
                                               value-decoder="kafkaDecoder"
                                               key-decoder="kafkaDecoder"
                                               max-messages="5000">
-                <int-kafka:topic id="IOT_DATA" streams="4"/>
+                <int-kafka:topic id="IOT_RT_DATA" streams="4"/>
+            </int-kafka:consumer-configuration>
+            <int-kafka:consumer-configuration group-id="group_hdfs_ds"
+                                              value-decoder="kafkaDecoder"
+                                              key-decoder="kafkaDecoder"
+                                              max-messages="5000">
+                <int-kafka:topic id="IOT_DS_DATA" streams="4"/>
             </int-kafka:consumer-configuration>
         </int-kafka:consumer-configurations>
     </int-kafka:consumer-context>	

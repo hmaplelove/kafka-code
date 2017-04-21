@@ -21,10 +21,13 @@ import com.casicloud.aop.kafka.core.service.KafkaService;
 
 @SuppressWarnings("deprecation")
 public class KafkaHBaseService implements KafkaService{
+	
 	private static final Logger logger = LoggerFactory.getLogger(KafkaHBaseService.class);
 	private static SimpleDateFormat sdf_full=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+	
 	@Autowired
 	private HbaseTemplate  hbaseTemplate;
+	
 	@Override
 	public void processMessage(Map<Object, Map<Object, Object>> message) throws Exception {
 		onMessage(message);
@@ -46,6 +49,9 @@ public class KafkaHBaseService implements KafkaService{
             		final String t_str=sdf_full.format(t_date);
             		data.put("t", t_str);
             		data.put("createTime", sdf_full.format(c_date));
+            		
+            		logger.info("["+topic+"]=========>"+JSON.toJSONString(data));
+
             		String tableName="e"+equipment;
             		final HashMap<Object, Object> params=data;
             		String key=hbaseTemplate.execute(tableName, new TableCallback<String>() {  
@@ -65,7 +71,6 @@ public class KafkaHBaseService implements KafkaService{
                         }  
                     });
             		logger.info("[rowKey]=========>"+key);
-	            	logger.info("["+topic+"]=========>"+JSON.toJSONString(data));
 				}
             }
         }

@@ -26,8 +26,8 @@
             </props>
         </property>
     </bean>
-	<import resource="spring-consumer-mongo.xml"/>
-	<import resource="spring-consumer-storm.xml"/>
-	<import resource="spring-consumer-hdfs.xml"/>
-	<import resource="spring-consumer-hbase.xml"/>
+	<import resource="classpath*:spring-consumer-mongo.xml"/>
+	<import resource="classpath*:spring-consumer-storm.xml"/>
+	<import resource="classpath*:spring-consumer-hdfs.xml"/>
+	<import resource="classpath*:spring-consumer-hbase.xml"/>
 </beans>

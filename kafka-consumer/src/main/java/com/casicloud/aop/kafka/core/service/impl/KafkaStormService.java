@@ -21,10 +21,12 @@ import com.casicloud.aop.kafka.core.service.KafkaService;
 
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class KafkaStormService implements KafkaService{
-
+	
 	private static final Logger logger = LoggerFactory.getLogger(KafkaStormService.class);
 	private static Map<String, HashMap> dsMap = new HashMap<String, HashMap>();
 	private static SimpleDateFormat sdf_date_hh=new SimpleDateFormat("yyyyMMddHH");
+	private static SimpleDateFormat sdf_full=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+	
 	@Autowired
     @Qualifier("inputToKafka")
 	private MessageChannel channel;
@@ -61,9 +63,18 @@ public class KafkaStormService implements KafkaService{
             		long max_std=std_millis+150*1000;
             		if (min_std<=current&&current<=max_std) {
 						//
+            			String t=data.get("t").toString();
+                		String createTime=data.get("createTime").toString();
+                		
+                		long t_date=Long.valueOf(t);
+                		long c_date=Long.valueOf(createTime);
+                		
+                		data.put("t", sdf_full.format(t_date));
+                		data.put("createTime", sdf_full.format(c_date));
+                		
             			if(!dsMap.get(equipment).containsKey(current_date_hh)){
             				dsMap.get(equipment).put(current_date_hh, json);
-            				send(json,topic);
+            				send(JSON.toJSONString(data),topic);
             			}
 					}
 				}

@@ -14,14 +14,14 @@
     <int-kafka:inbound-channel-adapter
             id="kafkaHBaseInboundChannelAdapter"
             kafka-consumer-context-ref="consumerHBaseContext"
-            auto-startup="false"
+            auto-startup="true"
             channel="inputFromKafkaToHBase">
         <int:poller fixed-delay="1" time-unit="MILLISECONDS"/>
     </int-kafka:inbound-channel-adapter>
     
     <bean id="kafkaHBaseService" class="com.casicloud.aop.kafka.core.service.impl.KafkaHBaseService"/>
 
-    <int:outbound-channel-adapter channel="inputFromKafkaToHBase" ref="kafkaHBaseService" method="processMessage" />
+    <int:outbound-channel-adapter id="kafkaHBaseOnboundChannelAdapter" channel="inputFromKafkaToHBase" ref="kafkaHBaseService" method="processMessage" />
 
     <int-kafka:consumer-context id="consumerHBaseContext" consumer-timeout="1000" zookeeper-connect="zookeeperConnect" consumer-properties="consumerProperties">
         <int-kafka:consumer-configurations>

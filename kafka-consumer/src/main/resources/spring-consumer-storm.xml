@@ -14,14 +14,14 @@
     <int-kafka:inbound-channel-adapter
             id="kafkaStormInboundChannelAdapter"
             kafka-consumer-context-ref="consumerStormContext"
-            auto-startup="false"
+            auto-startup="true"
             channel="inputFromKafkaToStorm">
         <int:poller fixed-delay="1" time-unit="MILLISECONDS"/>
     </int-kafka:inbound-channel-adapter>
     
     <bean id="kafkaStormService" class="com.casicloud.aop.kafka.core.service.impl.KafkaStormService"/>
 
-    <int:outbound-channel-adapter channel="inputFromKafkaToStorm" ref="kafkaStormService" method="processMessage" />
+    <int:outbound-channel-adapter id="kafkaStormOutboundChannelAdapter" channel="inputFromKafkaToStorm" ref="kafkaStormService" method="processMessage" />
 
     <int-kafka:consumer-context id="consumerStormContext" consumer-timeout="1000" zookeeper-connect="zookeeperConnect" consumer-properties="consumerProperties">
         <int-kafka:consumer-configurations>

@@ -14,7 +14,7 @@
     <int-kafka:inbound-channel-adapter
             id="kafkaMongoInboundChannelAdapter"
             kafka-consumer-context-ref="consumerMongoContext"
-            auto-startup="false"
+            auto-startup="true"
             channel="inputFromKafkaToMongo">
         <int:poller fixed-delay="1" time-unit="MILLISECONDS"/>
     </int-kafka:inbound-channel-adapter>
@@ -22,7 +22,7 @@
 
     <bean id="kafkaMongoService" class="com.casicloud.aop.kafka.core.service.impl.KafkaMongoService"/>
 
-    <int:outbound-channel-adapter channel="inputFromKafkaToMongo" ref="kafkaMongoService" method="processMessage" />
+    <int:outbound-channel-adapter id="kafkaMongoOutboundChannelAdapter" channel="inputFromKafkaToMongo" ref="kafkaMongoService" method="processMessage" />
 
     <int-kafka:consumer-context id="consumerMongoContext" consumer-timeout="1000" zookeeper-connect="zookeeperConnect" consumer-properties="consumerProperties">
         <int-kafka:consumer-configurations>

@@ -12,7 +12,7 @@
 	
 	<int:channel id="inputToKafka"/>
 
-    <int-kafka:outbound-channel-adapter kafka-producer-context-ref="kafkaProducerContext"
+    <int-kafka:outbound-channel-adapter id="outboundChannelAdapter" kafka-producer-context-ref="kafkaProducerContext"
                                         auto-startup="true"
                                         channel="inputToKafka"
                                         order="1"> 
@@ -24,14 +24,13 @@
                 <prop key="topic.metadata.refresh.interval.ms">3600000</prop>
                 <prop key="message.send.max.retries">5</prop>
                 <prop key="send.buffer.bytes">5242880</prop>
-                <prop key="partitioner.class">com.casicloud.aop.kafka.core.partitioner.IotPartitioner</prop>
-                
+                <!-- <prop key="partitioner.class">com.casicloud.aop.kafka.core.partitioner.IotPartitioner</prop> -->
             </props>
         </property>
     </bean>
 
     <bean id="stringSerializer" class="org.apache.kafka.common.serialization.StringSerializer"/>
-    <bean id="iotPartitioner" class="com.casicloud.aop.kafka.core.partitioner.IotPartitioner"/>
+    <!-- <bean id="iotPartitioner" class="com.casicloud.aop.kafka.core.partitioner.IotPartitioner"/> -->
 
     <int-kafka:producer-context id="kafkaProducerContext" producer-properties="producerProperties">
         <int-kafka:producer-configurations>

@@ -15,9 +15,9 @@
 	<context:property-placeholder location="classpath*:kafka.properties,classpath*:mongo.properties" />
 	<context:annotation-config />
 	<context:component-scan base-package="com.casicloud.aop.kafka" />
-	<import resource="spring-hbase.xml"/>
-	<import resource="spring-hdfs.xml"/>
-	<import resource="spring-producer.xml"/>
-	<import resource="spring-consumer.xml"/>
+	<import resource="classpath*:spring-hbase.xml"/>
+	<import resource="classpath*:spring-hdfs.xml"/>
+	<import resource="classpath*:spring-producer.xml"/>
+	<import resource="classpath*:spring-consumer.xml"/>
 	<import resource="classpath*:spring-mongo.xml"/>
 </beans>
