@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:int-kafka="http://www.springframework.org/schema/integration/kafka"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xsi:schemaLocation="http://www.springframework.org/schema/integration/kafka http://www.springframework.org/schema/integration/kafka/spring-integration-kafka-1.2.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-4.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd">
+
+	<int:channel id="inputFromKafkaToMongo"/>
+
+    <int-kafka:inbound-channel-adapter
+            id="kafkaMongoInboundChannelAdapter"
+            kafka-consumer-context-ref="consumerMongoContext"
+            auto-startup="false"
+            channel="inputFromKafkaToMongo">
+        <int:poller fixed-delay="1" time-unit="MILLISECONDS"/>
+    </int-kafka:inbound-channel-adapter>
+    
+
+    <bean id="kafkaMongoService" class="com.casicloud.aop.kafka.core.service.impl.KafkaMongoService"/>
+
+    <int:outbound-channel-adapter channel="inputFromKafkaToMongo" ref="kafkaMongoService" method="processMessage" />
+
+    <int-kafka:consumer-context id="consumerMongoContext" consumer-timeout="1000" zookeeper-connect="zookeeperConnect" consumer-properties="consumerProperties">
+        <int-kafka:consumer-configurations>
+            <int-kafka:consumer-configuration group-id="group_mongo_rt"
+                                              value-decoder="kafkaDecoder"
+                                              key-decoder="kafkaDecoder"
+                                              max-messages="5000">
+                <int-kafka:topic id="IOT_RT_DATA" streams="4"/>
+            </int-kafka:consumer-configuration>
+            <int-kafka:consumer-configuration group-id="group_mongo_ds"
+                                              value-decoder="kafkaDecoder"
+                                              key-decoder="kafkaDecoder"
+                                              max-messages="5000">
+                <int-kafka:topic id="IOT_DS_DATA" streams="4"/>
+            </int-kafka:consumer-configuration>
+        </int-kafka:consumer-configurations>
+    </int-kafka:consumer-context>	
+</beans>
