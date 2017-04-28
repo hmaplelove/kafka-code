@@ -7,6 +7,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+import org.apache.hadoop.hbase.HColumnDescriptor;
+import org.apache.hadoop.hbase.HTableDescriptor;
+import org.apache.hadoop.hbase.TableName;
+import org.apache.hadoop.hbase.client.HBaseAdmin;
 import org.apache.hadoop.hbase.client.HTableInterface;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.util.Bytes;
@@ -54,6 +58,24 @@ public class KafkaHBaseService implements KafkaService{
 
             		String tableName="e"+equipment;
             		final HashMap<Object, Object> params=data;
+            		HBaseAdmin admin = new HBaseAdmin(hbaseTemplate.getConfiguration());
+            		if (!admin.tableExists(tableName)) {
+            			HTableDescriptor table = new HTableDescriptor(TableName.valueOf(tableName));
+            			HColumnDescriptor family= new HColumnDescriptor(topic);
+            			table.addFamily(family);
+            			admin.createTable(table);
+					}else{
+						admin.disableTable(tableName);
+						HTableDescriptor table= admin.getTableDescriptor(TableName.valueOf(tableName));
+						HColumnDescriptor family = table.getFamily(Bytes.toBytes(topic));
+						if (family==null) {
+							family= new HColumnDescriptor(topic);
+							admin.addColumn(tableName, family);
+						}
+						admin.enableTable(tableName);
+					}
+            		admin.close();
+            		
             		String key=hbaseTemplate.execute(tableName, new TableCallback<String>() {  
 						public String doInTable(HTableInterface table) throws Throwable {  
                         	String key=UUID.randomUUID().toString();

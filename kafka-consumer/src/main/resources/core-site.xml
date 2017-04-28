@@ -2,7 +2,7 @@
     
     <property>
       <name>fs.defaultFS</name>
-      <value>hdfs://172.17.70.250:8020</value>
+      <value>hdfs://hdp1.hdp:8020</value>
       <final>true</final>
     </property>
     
@@ -28,7 +28,7 @@
     
     <property>
       <name>hadoop.proxyuser.hcat.hosts</name>
-      <value>centos2</value>
+      <value>hdp4.hdp</value>
     </property>
     
     <property>
@@ -48,17 +48,17 @@
     
     <property>
       <name>hadoop.proxyuser.hive.hosts</name>
-      <value>centos2</value>
+      <value>hdp4.hdp</value>
     </property>
     
     <property>
-      <name>hadoop.proxyuser.oozie.groups</name>
+      <name>hadoop.proxyuser.livy.groups</name>
       <value>*</value>
     </property>
     
     <property>
-      <name>hadoop.proxyuser.oozie.hosts</name>
-      <value>centos2</value>
+      <name>hadoop.proxyuser.livy.hosts</name>
+      <value>*</value>
     </property>
     
     <property>
@@ -68,7 +68,7 @@
     
     <property>
       <name>hadoop.proxyuser.root.hosts</name>
-      <value>centos1</value>
+      <value>hdp0.hdp</value>
     </property>
     
     <property>

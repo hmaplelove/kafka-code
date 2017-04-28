@@ -63,7 +63,7 @@
     
     <property>
       <name>dfs.datanode.du.reserved</name>
-      <value>3621389312</value>
+      <value>6605585920</value>
     </property>
     
     <property>
@@ -184,18 +184,18 @@
     
     <property>
       <name>dfs.namenode.handler.count</name>
-      <value>25</value>
+      <value>200</value>
     </property>
     
     <property>
       <name>dfs.namenode.http-address</name>
-      <value>centos1:50070</value>
+      <value>hdp1.hdp:50070</value>
       <final>true</final>
     </property>
     
     <property>
       <name>dfs.namenode.https-address</name>
-      <value>centos1:50470</value>
+      <value>hdp1.hdp:50470</value>
     </property>
     
     <property>
@@ -211,7 +211,7 @@
     
     <property>
       <name>dfs.namenode.rpc-address</name>
-      <value>centos1:8020</value>
+      <value>hdp1.hdp:8020</value>
     </property>
     
     <property>
@@ -221,7 +221,7 @@
     
     <property>
       <name>dfs.namenode.secondary.http-address</name>
-      <value>centos2:50090</value>
+      <value>hdp2.hdp:50090</value>
     </property>
     
     <property>

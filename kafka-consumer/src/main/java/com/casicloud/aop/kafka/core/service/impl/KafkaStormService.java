@@ -41,45 +41,66 @@ public class KafkaStormService implements KafkaService{
             for (Entry<Object, Object> msg : entry.getValue().entrySet()) {
             	List<String> list=(List<String>) msg.getValue();
             	for (String json : list) {
-            		logger.info("["+topic+"]=========>"+json);
             		HashMap data=JSON.parseObject(json, HashMap.class);
-            		String equipment=data.get("equipment").toString();
-            		String collecttime=data.get("t").toString();
-            		long current=Long.valueOf(collecttime);
-            		//yyyyMMddHH
-            		String current_date_hh=sdf_date_hh.format(new Date(current));
+        			String t=data.get("t").toString();
+            		String createTime=data.get("createTime").toString();
             		
-            		if (!dsMap.containsKey(equipment)) {
-            			dsMap.put(equipment, new HashMap());
-					}
-            		//删除历史的数据
-            		long yesterday=current-24*60*60*1000;
-            		String yesterday_date_hh=sdf_date_hh.format(new Date(yesterday));
-            		if (dsMap.get(equipment).containsKey(yesterday_date_hh)) {
-            			dsMap.get(equipment).remove(yesterday_date_hh);
-            		}
-            		long std_millis=sdf_date_hh.parse(current_date_hh).getTime();
-            		long min_std=std_millis-150*1000;
-            		long max_std=std_millis+150*1000;
-            		if (min_std<=current&&current<=max_std) {
-						//
-            			String t=data.get("t").toString();
-                		String createTime=data.get("createTime").toString();
-                		
-                		long t_date=Long.valueOf(t);
-                		long c_date=Long.valueOf(createTime);
-                		
-                		data.put("t", sdf_full.format(t_date));
-                		data.put("createTime", sdf_full.format(c_date));
-                		
-            			if(!dsMap.get(equipment).containsKey(current_date_hh)){
-            				dsMap.get(equipment).put(current_date_hh, json);
-            				send(JSON.toJSONString(data),topic);
-            			}
-					}
+            		long t_date=Long.valueOf(t);
+            		long c_date=Long.valueOf(createTime);
+            		
+            		data.put("t", sdf_full.format(t_date));
+            		data.put("createTime", sdf_full.format(c_date));
+            		send(JSON.toJSONString(data),topic);
+            		
 				}
             }
         }
+	}
+	private void onMessage1(Map<Object, Map<Object, Object>> message) throws Exception {
+		for (Map.Entry < Object,Map<Object, Object>>entry:  message.entrySet()){
+			String topic=entry.getKey().toString();
+			for (Entry<Object, Object> msg : entry.getValue().entrySet()) {
+				List<String> list=(List<String>) msg.getValue();
+				for (String json : list) {
+					logger.info("["+topic+"]=========>"+json);
+					HashMap data=JSON.parseObject(json, HashMap.class);
+					String equipment=data.get("equipment").toString();
+					String collecttime=data.get("t").toString();
+					long current=Long.valueOf(collecttime);
+					//yyyyMMddHH
+					String current_date_hh=sdf_date_hh.format(new Date(current));
+					
+					if (!dsMap.containsKey(equipment)) {
+						dsMap.put(equipment, new HashMap());
+					}
+					//删除历史的数据
+					long yesterday=current-24*60*60*1000;
+					String yesterday_date_hh=sdf_date_hh.format(new Date(yesterday));
+					if (dsMap.get(equipment).containsKey(yesterday_date_hh)) {
+						dsMap.get(equipment).remove(yesterday_date_hh);
+					}
+					long std_millis=sdf_date_hh.parse(current_date_hh).getTime();
+					long min_std=std_millis-150*1000;
+					long max_std=std_millis+150*1000;
+					if (min_std<=current&&current<=max_std) {
+						//
+						String t=data.get("t").toString();
+						String createTime=data.get("createTime").toString();
+						
+						long t_date=Long.valueOf(t);
+						long c_date=Long.valueOf(createTime);
+						
+						data.put("t", sdf_full.format(t_date));
+						data.put("createTime", sdf_full.format(c_date));
+						
+						if(!dsMap.get(equipment).containsKey(current_date_hh)){
+							dsMap.get(equipment).put(current_date_hh, json);
+							send(JSON.toJSONString(data),topic);
+						}
+					}
+				}
+			}
+		}
 	}
 	
 	private boolean send(String data,String topic) throws Exception{
